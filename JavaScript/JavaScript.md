@@ -581,14 +581,38 @@ RegExp 对象有 3 个方法：test()、exec() 以及 compile()。
 - compile() 方法用于改变 RegExp。 compile() 既可以改变检索模式，也可以添加或删除第二个参数。
 
 
-# 计时
-- setTimeout() 未来的某时执行代码
+# 定时器（timer）
+## setTimeout()
+setTimeout函数用来指定某个函数或某段代码，在多少毫秒之后执行。它返回一个整数，表示定时器的编号，以后可以用来取消这个定时器。
 ```
-var t=setTimeout("javascript语句",xxx ms)
+var timerId = setTimeout(func|code, delay);
+
+console.log(1);
+setTimeout('console.log(2)',1000);
+console.log(3);
+// 1
+// 3
+// 2
+
+// 如果推迟执行的是函数，就直接将函数名，作为setTimeout的参数。
+function f() {
+  console.log(2);
+}
+
+setTimeout(f, 1000);
 ```
-setTimeout() 方法会返回某个值。在上面的语句中，值被储存在名为 t 的变量中。假如你希望取消这个 setTimeout()，你可以使用这个变量名来指定它。
-- clearTimeout() 取消setTimeout()
-- clearTimeout(setTimeout_variable)
+- setTimeout函数接受两个参数，第一个参数func|code是将要推迟执行的函数名或者一段代码，第二个参数delay是推迟执行的毫秒数。
+- setTimeout还允许更多的参数。它们将依次传入推迟执行的函数（回调函数）。
+
+## setInterval()
+setInterval函数的用法与setTimeout完全一致，区别仅仅在于setInterval指定某个任务每隔一段时间就执行一次，也就是无限次的定时执行。
+
+
+## clearTimeout()，clearInterval()
+- clearTimeout() 取消setTimeout() `clearTimeout(setTimeout_variable)`
+- setTimeout和setInterval返回的整数值是连续的，也就是说，第二个setTimeout方法返回的整数值，将比第一个的整数值大1。
+  
+
 
 
 # Cookies
