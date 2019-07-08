@@ -92,7 +92,50 @@ PI = 3;
 
 
 
+# 变量的解构赋值
+```
+// 数组的解构赋值 
+let [a, b, c] = [1, 2, 3];
+// 默认值
+let [foo = true] = [];
+foo // true
+```
+- ES6 内部使用严格相等运算符（===），判断一个位置是否有值。所以，只有当一个数组成员严格等于undefined，默认值才会生效。如果一个数组成员是null，默认值就不会生效，因为null不严格等于undefined。
 
+
+```
+// 对象的解构赋值
+let { foo, bar } = { foo: 'aaa', bar: 'bbb' };
+foo // "aaa"
+bar // "bbb
+```
+- 对象的属性没有次序，变量必须与属性同名，才能取到正确的值。
+
+
+```
+// 字符串的解构赋
+const [a, b, c, d, e] = 'hello';
+a // "h"
+b // "e"
+c // "l"
+d // "l"
+e // "o"
+
+// 数值和布尔值的解构赋值
+let {toString: s} = 123;
+s === Number.prototype.toString // true
+
+let {toString: s} = true;
+s === Boolean.prototype.toString // true
+
+
+// 函数参数的解构赋
+function add([x, y]){
+  return x + y;
+}
+
+add([1, 2]); // 3
+```
 
 
 # Exponentiation Operator(**)
@@ -176,6 +219,8 @@ isNaN("Hello");       // returns true
 ```
 
 
+
+# 函数的扩展
 # Arrow Functions
 Arrow functions allows a short syntax for writing function expressions.
 You don't need the function keyword, the return keyword, and the curly brackets.
