@@ -287,6 +287,8 @@ console.log(document.links[0].href);
 console.log(document.links[0].title);
 console.log(document.links[0].style);
 ```
+with可以减少代码的书写，但是会造成混淆。因此，不要使用with语句。
+
 
 
 ## Map
@@ -380,6 +382,7 @@ x > '11' // false
 - 同一类型的原始类型的值（数值、字符串、布尔值）比较时，值相同就返回true，值不同就返回false。
 - 两个复合类型（对象、数组、函数）的数据比较时，不是比较它们的值是否相等，而是比较它们是否指向同一个地址。
 - undefined和null与自身严格相等。
+- **不要使用相等运算符`（==）`，只使用严格相等运算符`（===）`**
 
 ## 相等运算符
 相等运算符用来比较相同类型的数据时，与严格相等运算符完全一样。
@@ -460,6 +463,28 @@ switch (x) {
 }
 // x 没有发生类型转换
 ```
+- switch...case不使用大括号，不利于代码形式的统一。此外，这种结构类似于goto语句，容易造成程序流程的混乱，使得代码结构混乱不堪，不符合面向对象编程的原则。最好不用switch 用对象结构
+```
+function doAction(action) {
+  var actions = {
+    'hack': function () {
+      return 'hack';
+    },
+    'slash': function () {
+      return 'slash';
+    },
+    'run': function () {
+      return 'run';
+    }
+  };
+
+  if (typeof actions[action] !== 'function') {
+    throw new Error('Invalid action.');
+  }
+
+  return actions[action]();
+}
+```
 
 ### 三元运算符 ?:
 (条件) ? 表达式1 : 表达式2
@@ -491,6 +516,34 @@ top:
 // i=0, j=2
 // i=1, j=0
 ```
+
+
+# 数据类型的转换
+## 强制转换
+### Number()
+使用Number函数，可以将任意类型的值转化成数值。
+- Number函数将字符串转为数值，要比parseInt函数严格很多。基本上，只要有一个字符无法转成数值，整个字符串就会被转为NaN。
+
+
+### String()
+String函数可以将任意类型的值转化成字符串，转换规则如下。
+- 数值：转为相应的字符串。
+- 字符串：转换后还是原来的值。
+- 布尔值：true转为字符串"true"，false转为字符串"false"。
+- undefined：转为字符串"undefined"。
+- null：转为字符串"null"。
+- String方法的参数如果是对象，返回一个类型字符串；如果是数组，返回该数组的字符串形式。
+ 
+ 
+### Boolean()
+Boolean()函数可以将任意类型的值转为布尔值。
+
+
+## 自动转换
+- 不同类型的数据互相运算。
+- 对非布尔值类型的数据求布尔值。
+- 对非数值类型的值使用一元运算符（即+和-）。
+
 
 
 # 输出
@@ -542,18 +595,231 @@ setTimeout() 方法会返回某个值。在上面的语句中，值被储存在�
 
 
 # Error
-throw 语句允许我们创建自定义错误。正确的技术术语是：创建或抛出异常（exception）。
-throw exception（自定义错误）
+JavaScript 原生提供Error构造函数，所有抛出的错误都是这个构造函数的实例。
 ```
-try
-  {
+var err = new Error('出错了');
+err.message // "出错了"
+```
+- message：错误提示信息
+- name：错误名称（非标准属性）
+- stack：错误的堆栈（非标准属性）
+
+## 原生错误类型
+6种派生错误，连同原始的Error对象，都是构造函数。开发者可以使用它们，手动生成错误对象的实例。这些构造函数都接受一个参数，代表错误提示信息（message）。
+
+### SyntaxError
+SyntaxError对象是解析代码时发生的语法错误。
+```
+// 变量名错误
+var 1a;
+// Uncaught SyntaxError: Invalid or unexpected token
+
+// 缺少括号
+console.log 'hello');
+// Uncaught SyntaxError: Unexpected string
+```
+
+### ReferenceError
+ReferenceError对象是引用一个不存在的变量时发生的错误。
+```
+// 使用一个不存在的变量
+unknownVariable
+// Uncaught ReferenceError: unknownVariable is not defined
+
+// 另一种触发场景是，将一个值分配给无法分配的对象，比如对函数的运行结果或者this赋值。
+// 等号左侧不是变量
+console.log() = 1
+// Uncaught ReferenceError: Invalid left-hand side in assignment
+
+// this 对象不能手动赋值
+this = 1
+// ReferenceError: Invalid left-hand side in assignment
+```
+
+### RangeError 
+RangeError对象是一个值超出有效范围时发生的错误。主要有几种情况，一是数组长度为负数，二是Number对象的方法参数超出范围，以及函数堆栈超过最大值。
+```
+// 数组长度不得为负数
+new Array(-1)
+// Uncaught RangeError: Invalid array length
+```
+
+### TypeError
+TypeError对象是变量或参数不是预期类型时发生的错误。比如，对字符串、布尔值、数值等原始类型的值使用new命令，就会抛出这种错误，因为new命令的参数应该是一个构造函数。
+```
+new 123
+// Uncaught TypeError: number is not a func
+
+var obj = {};
+obj.unknownMethod()
+// Uncaught TypeError: obj.unknownMethod is not a function
+```
+
+### URIError 
+URIError对象是 URI 相关函数的参数不正确时抛出的错误，主要涉及encodeURI()、decodeURI()、encodeURIComponent()、decodeURIComponent()、escape()和unescape()这六个函数。
+```
+decodeURI('%2')
+// URIError: URI malformed
+```
+
+### EvalError 
+eval函数没有被正确执行时，会抛出EvalError错误。该错误类型已经不再使用了，只是为了保证与以前代码兼容，才继续保留。
+
+
+## 自定义错误
+自定义一个错误对象UserError，让它继承Error对象。然后，就可以生成这种自定义类型的错误了。
+```
+function UserError(message) {
+  this.message = message || '默认信息';
+  this.name = 'UserError';
+}
+
+UserError.prototype = new Error();
+UserError.prototype.constructor = UserError;
+```
+
+
+## throw 
+throw语句允许我们创建自定义错误。正确的技术术语是：创建或抛出异常（exception）。
+```
+throw new xxxError
+```
+
+
+## try catch finally
+```
+try {
   //在这里运行代码
-  }
-catch(err)
-  {
+  throw new Error('出错了!');
+} catch(err) {
   //在这里处理错误
-  }
+} finally {
+    ...
+}
+
 ```
+
+
+# donsole
+console对象是 JavaScript 的原生对象，它有点像 Unix 系统的标准输出stdout和标准错误stderr，可以输出各种信息到控制台，并且还提供了很多有用的辅助方法。
+
+## console 对象的静态方法
+### console.log 
+- console.log方法用于在控制台输出信息。它可以接受一个或多个参数，将它们连接起来输出。
+- console.log方法支持以下占位符，不同类型的数据必须使用对应的占位符。
+```
+%s 字符串
+%d 整数
+%i 整数
+%f 浮点数
+%o 对象的链接
+%c CSS 格式字符串
+
+var number = 11 * 9;
+var color = 'red';
+console.log('%d %s balloons', number, color);
+// 99 red balloons
+
+console.log(
+  '%cThis text is styled!',
+  'color: red; background: yellow; font-size: 24px;'
+)
+```
+- console.info是console.log方法的别名，用法完全一样。只不过console.info方法会在输出信息的前面，加上一个蓝色图标。
+- console.debug方法与console.log方法类似，会在控制台输出调试信息。但是，默认情况下，console.debug输出的信息不会显示，只有在打开显示级别在verbose的情况下，才会显示。
+```
+['log', 'info', 'warn', 'error'].forEach(function(method) {
+  console[method] = console[method].bind(
+    console,
+    new Date().toISOString()
+  );
+});
+
+console.log("出错了！");
+// 2014-05-18T09:00.000Z 出错了！
+```
+
+### console.warn() & console.error()
+warn方法和error方法也是在控制台输出信息，它们与log方法的不同之处在于，warn方法输出信息时，在最前面加一个黄色三角，表示警告；error方法输出信息时，在最前面加一个红色的叉，表示出错。同时，还会高亮显示输出文字和错误发生的堆栈。
+
+
+### console.table()
+对于某些复合类型的数据，console.table方法可以将其转为表格显示
+```
+var languages = [
+  { name: "JavaScript", fileExtension: ".js" },
+  { name: "TypeScript", fileExtension: ".ts" },
+  { name: "CoffeeScript", fileExtension: ".coffee" }
+];
+
+console.table(languages);
+```
+
+### console.count()
+count方法用于计数，输出它被调用了多少次。
+
+### console.dir()，console.dirxml()
+- dir方法用来对一个对象进行检查（inspect），并以易于阅读和打印的格式显示。
+- dirxml方法主要用于以目录树的形式，显示 DOM 节点。
+
+
+### console.assert()
+console.assert方法主要用于程序运行过程中，进行条件判断，如果不满足条件，就显示一个错误，但不会中断程序执行。这样就相当于提示用户，内部状态不正确。它接受两个参数，第一个参数是表达式，第二个参数是字符串。只有当第一个参数为false，才会提示有错误，在控制台输出第二个参数，否则不会有任何结果
+```
+console.assert(list.childNodes.length < 500, '节点个数大于等于500')
+```
+
+
+### console.time()，console.timeEnd()
+这两个方法用于计时，可以算出一个操作所花费的准确时间。参数是计时器的名称。调用timeEnd方法之后，控制台会显示“计时器名称: 所耗费的时间”。
+```
+console.time('Array initialize');
+
+var array= new Array(1000000);
+for (var i = array.length - 1; i >= 0; i--) {
+  array[i] = new Object();
+};
+
+console.timeEnd('Array initialize');
+// Array initialize: 1914.481ms
+```
+
+
+### console.group()，console.groupEnd()，console.groupCollapsed()
+console.group和console.groupEnd这两个方法用于将显示的信息分组。它只在输出大量信息时有用，分在一组的信息，可以用鼠标折叠/展开。
+
+
+### console.trace()，console.clear()
+- console.trace方法显示当前执行的代码在堆栈中的调用路径。
+- console.clear方法用于清除当前控制台的所有输出，将光标回置到第一行。如果用户选中了控制台的“Preserve log”选项，console.clear方法将不起作用。
+
+
+## 命令行 API
+- `$_` 属性返回上一个表达式的值。
+- 控制台保存了最近5个在 Elements 面板选中的 DOM 元素，`$0`代表倒数第一个（最近一个），`$1`代表倒数第二个，以此类推直到`$4`
+- `$(selector)`返回第一个匹配的元素，等同于`document.querySelector()`。注意，如果页面脚本对$有定义，则会覆盖原始的定义。比如，页面里面有 jQuery，控制台执行`$(selector)`就会采用 jQuery 的实现，返回一个数组。
+- `$$(selector)`返回选中的 DOM 对象，等同于`document.querySelectorAll`。
+- `$x(path)`方法返回一个数组，包含匹配特定 XPath 表达式的所有 DOM 元素。
+- `inspect(object)`方法打开相关面板，并选中相应的元素，显示它的细节。DOM 元素在Elements面板中显示，比如`inspect(document)`会在 `Elements` 面板显示document元素。JavaScript 对象在控制台面板Profiles面板中显示，比如`inspect(window)`。
+- `getEventListeners(object)`方法返回一个对象，该对象的成员为object登记了回调函数的各种事件（比如click或keydown），每个事件对应一个数组，数组的成员为该事件的回调函数。
+- `keys(object)`方法返回一个数组，包含object的所有键名。`values(object)`方法返回一个数组，包含object的所有键值。
+- `monitorEvents(object[, events])`方法监听特定对象上发生的特定事件。事件发生时，会返回一个Event对象，包含该事件的相关信息。`unmonitorEvents`方法用于停止监听。
+  
+
+
+## debugger 
+- debugger语句主要用于除错，作用是设置断点。如果有正在运行的除错工具，程序运行到debugger语句时会自动停下。如果没有除错工具，debugger语句不会产生任何结果，JavaScript 引擎自动跳过这一句。
+- Chrome 浏览器中，当代码运行到debugger语句时，就会暂停运行，自动打开脚本源码界面。
+```
+for(var i = 0; i < 5; i++){
+  console.log(i);
+  if (i === 2) debugger;
+}
+```
+
+
+
+
 
 
 # OOP
