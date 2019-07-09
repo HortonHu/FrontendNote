@@ -16,11 +16,54 @@ ng serve --open
 - bootstrap —— 应用的主视图，称为根组件。它是应用中所有其它视图的宿主。只有根模块才应该设置这个 bootstrap 属性。
 
 
-# 组件 component
+# 组件 component & 模板 template
 - selector 一旦在模板 HTML 中找到了这个选择器对应的标签，就创建并插入该组件的一个实例。
 - templateUrl 该组件的 HTML 模板文件相对于这个组件文件的地址。 另外，你还可以用 template 属性的值来提供内联的 HTML 模板
 - styleUrls 该组件的 Style 模板文件相对于这个组件文件的地址。 另外，你还可以内联的 Style 模板 或者直接为空
 - Providers: 当前组件所需的服务的一个数组
+
+
+## 数据绑定(data binding)
+- 数据绑定，就不再跟 HTML attribute 打交道了。 这里不是设置 attribute，而是设置 DOM 元素、组件和指令的 property。模板绑定是通过 property 和事件来工作的，而不是 attribute。
+- attribute 初始化 DOM property，然后它们的任务就完成了。property 的值可以改变；attribute 的值不能改变。
+
+![data binding](img/databinding.png)
+
+### 插值表达式 interpolation (template expression)
+所谓 "插值" 是指将表达式嵌入到标记文本中。
+- 要使用插值表达式，就把属性名包裹在双花括号里放进视图模板，如 {{myHero}}。
+- 当这些属性发生变化时，Angular 就会自动刷新显示。
+```
+<p>{{title}}</p>
+<div><img src="{{itemImageUrl}}"></div>
+```
+
+#### 表达式上下文
+典型的表达式上下文就是这个组件实例.表达式的上下文可以包括组件之外的对象。 比如模板输入变量 (let customer)和模板引用变量(#customerInput)就是备选的上下文对象之一。
+```
+<ul>
+  <li *ngFor="let customer of customers">{{customer.name}}</li>
+</ul>
+
+<label>Type something:
+  <input #customerInput>{{customerInput.value}}
+</label>
+```
+
+
+### 属性绑定
+#### 模板语句(template statement)
+模板语句用来响应由绑定目标（如 HTML 元素、组件或指令）触发的事件。`(event)="statement"`
+```
+<button (click)="deleteHero()">Delete hero</button>
+```
+
+#### 语句上下文(Statement context)
+典型的语句上下文就是当前组件的实例。
+- (click)="deleteHero()" 中的 deleteHero 就是这个数据绑定组件上的一个方法。
+- 模板上下文中的变量名的优先级高于组件上下文中的变量名。
+- 模板语句不能引用全局命名空间的任何东西。比如不能引用 window 或 document，也不能调用 console.log 或 Math.max。
+
 
 
 # 服务 service
@@ -44,14 +87,6 @@ export class Logger {
 - 依赖不一定是服务 —— 它还可能是函数或值。
 
 
-# data binding
-```
-<li>{{hero.name}}</li> 
-<app-hero-detail [hero]="selectedHero"></app-hero-detail>
-<li (click)="selectHero(hero)"></li>
-```
-
-![data binding](img/databinding.png)
 
 
 # pipe
@@ -68,49 +103,6 @@ export class Logger {
 属性型指令会修改现有元素的外观或行为。 在模板中，它们看起来就像普通的 HTML 属性一样，因此得名“属性型指令”。
 ngModel 指令就是属性型指令的一个例子，它实现了双向数据绑定。 ngModel 修改现有元素（一般是 <input>）的行为：设置其显示属性值，并响应 change 事件。` <input [(ngModel)]="hero.name">`
 
-
-
-
-
-# template
-` <script> `元素，它被禁用了，以阻止脚本注入攻击的风险。
- 
-
-- 插值表达式 {{...}}
-Angular 对所有双花括号中的表达式求值，把求值的结果转换成字符串，并把它们跟相邻的字符串字面量连接起来。最后，把这个组合出来的插值结果赋给元素或指令的属性。
-```
-    <div><img src="{{itemImageUrl}}"></div>
-    <!-- "The sum of 1 + 1 is 2" -->
-    <p>The sum of 1 + 1 is {{1 + 1}}.</p>
-```
-
-模板表达式
-[property]="expression"
-
-
-表达式上下文
-```
-<ul>
-  <li *ngFor="let customer of customers">{{customer.name}}</li>
-</ul>
-
-<label>Type something:
-  <input #customerInput>{{customerInput.value}}
-</label>
-```
-
-模板语句
-模板语句用来响应由绑定目标（如 HTML 元素、组件或指令）触发的事件。
-(event)="statement"
-```
-<button (click)="deleteHero()">Delete hero</button>
-```
-
-语句上下文
-典型的语句上下文就是当前组件的实例。 (click)="deleteHero()" 中的 deleteHero 就是这个数据绑定组件上的一个方法。
-
-
-
 
 
 
