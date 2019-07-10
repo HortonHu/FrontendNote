@@ -50,7 +50,7 @@
 <div class="modal-dialog modal-lg">
 ```
 
-![](im/modal-small.png)
+![](img/modal-small.png)
 
 ![](img/modal-large.png)
 
