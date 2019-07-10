@@ -224,7 +224,7 @@
 </html>
 ```
 
-![](img/center)
+![](img/center.png)
 
 
 # 宽度
