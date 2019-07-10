@@ -106,7 +106,7 @@ Bootstrap 4 中允许我们将按钮放在同一行上。可以在` <div>` 元�
     <button type="button" class="btn btn-primary">Sony</button>
   </div>
 ```
-![](img/button-group-size)
+![](img/button-group-size.png)
 
 
 ## 垂直按钮组
