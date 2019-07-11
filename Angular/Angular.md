@@ -73,6 +73,34 @@ ng serve --open
 </label>
 ```
 
+### 模板表达式操作符 Template expression operators
+#### 管道操作符 ( `|` )
+管道是一个简单的函数，它接受一个输入值，并返回转换结果。
+ 
+#### 安全导航操作符 ( `?.` )
+Angular 的安全导航操作符 (?.) 是一种流畅而便利的方式，用来保护出现在属性路径中 null 和 undefined 值。
+```
+The current hero's name is {{currentHero?.name}}
+```
+
+也可以通过用NgIf代码环绕它来解决这个问题
+```
+<div *ngIf="nullHero">The null hero's name is {{nullHero.name}}</div>
+```
+
+还可以尝试通过 `&&` 来把属性路径的各部分串起来，让它在遇到第一个空值的时候，就返回空。
+```
+The null hero's name is {{nullHero && nullHero.name}}
+```
+
+#### 非空断言操作符（`!`）
+非空断言操作符不会防止出现 null 或 undefined。 它只是告诉 TypeScript 的类型检查器对特定的属性表达式，不做 "严格空值检测"。
+```
+<div *ngIf="hero">
+  The hero's name is {{hero!.name}}
+</div>
+```
+
 
 ## 模板语句(template statement)
 模板语句用来响应由绑定目标（如 HTML 元素、组件或指令）触发的事件。`(event)="statement"`
@@ -164,15 +192,48 @@ export class Logger {
 
 
 
-# Directives
-结构型指令
+# 指令 Directives
+## 结构型指令
 结构型指令通过添加、移除或替换 DOM 元素来修改布局。 
-- *ngFor 是一个迭代器，它要求 Angular 为 heroes 列表中的每个英雄渲染出一个 `<li>`。
-- *ngIf 是个条件语句，只有当选中的英雄存在时，它才会包含 HeroDetail 组件。
 
-属性型指令
+### *ngFor 
+一个迭代器，它要求 Angular 为 heroes 列表中的每个英雄渲染出一个 `<li>`。
+
+#### 带 trackBy 的 *ngFor
+- ngFor 指令有时候会性能较差，特别是在大型列表中。 对一个条目的一丁点改动、移除或添加，都会导致级联的 DOM 操作。
+- 指定一个 trackBy，Angular 就可以避免这种折腾。 往组件中添加一个方法，它会返回 NgFor应该追踪的值。 
+
+
+### *ngIf 
+条件语句，只有当选中的英雄存在时，它才会包含 HeroDetail 组件。
+
+- 隐藏子树和用 NgIf 排除子树是截然不同的。当隐藏子树时，它仍然留在 DOM 中。 子树中的组件及其状态仍然保留着。 即使对于不可见属性，Angular 也会继续检查变更。 子树可能占用相当可观的内存和运算资源。
+- 当 NgIf 为 false 时，Angular 从 DOM 中物理地移除了这个元素子树。 它销毁了子树中的组件及其状态，也潜在释放了可观的资源，最终让用户体验到更好的性能。
+- 显示/隐藏的技术对于只有少量子元素的元素是很好用的，但要当心别试图隐藏大型组件树。相比之下，NgIf 则是个更安全的选择。
+- ngIf 指令通常会用来防范空指针错误。 
+
+
+### *ngSwitch 
+一组指令，用来在多个可选视图之间切换。
+
+
+## 属性型指令
 属性型指令会修改现有元素的外观或行为。 在模板中，它们看起来就像普通的 HTML 属性一样，因此得名“属性型指令”。
-ngModel 指令就是属性型指令的一个例子，它实现了双向数据绑定。 ngModel 修改现有元素（一般是 <input>）的行为：设置其显示属性值，并响应 change 事件。` <input [(ngModel)]="hero.name">`
+
+### NgClass
+通过绑定到 NgClass，可以同时添加或移除多个类。
+
+### NgStyle
+NgStyle 绑定可以同时设置多个内联样式。
+
+### NgModel 
+ngModel 指令就是属性型指令的一个例子，它实现了双向数据绑定。 ngModel 修改现有元素（一般是 <input>）的行为：设置其显示属性值，并响应 change 事件。
+
+- 使用 ngModel 时需要 FormsModule
+- 在使用 ngModel 指令进行双向数据绑定之前，你必须导入 FormsModule 并把它添加到 NgModule 的 imports 列表中。 
+``` 
+<input [(ngModel)]="hero.name">
+```
 
 
 
