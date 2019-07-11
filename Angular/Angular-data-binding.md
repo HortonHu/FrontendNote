@@ -4,7 +4,7 @@
 ![data binding](img/databinding.png)
 
 
-## 插值表达式 interpolation
+# 插值表达式 interpolation
 所谓 "插值" 是指将表达式嵌入到标记文本中。
 - 要使用插值表达式，就把属性名包裹在双花括号里放进视图模板，如 {{myHero}}。
 - 当这些属性发生变化时，Angular 就会自动刷新显示。
@@ -13,7 +13,8 @@
 <div><img src="{{itemImageUrl}}"></div>
 ```
 
-## 模板表达式 Template expressions
+
+# 模板表达式 Template expressions
 - 模板表达式会产生一个值，并出现在双花括号 `{{ }}` 中。 Angular 执行这个表达式，并把它赋值给绑定目标的属性，这个绑定目标可能是 `HTML 元素、组件或指令`。
 - 在属性绑定中会再次看到模板表达式，它出现在 = 右侧的引号中，就像这样：`[property]="expression"`
 
@@ -27,7 +28,7 @@
 - 新的模板表达式运算符，比如 `|`、`?`. 和 `!`。
 
 
-### 表达式上下文 expression context
+## 表达式上下文 expression context
 典型的表达式上下文就是这个组件实例.表达式的上下文可以包括组件之外的对象。 比如模板输入变量 (let customer)和模板引用变量(#customerInput)就是备选的上下文对象之一。
 ```
 <ul>
@@ -39,11 +40,11 @@
 </label>
 ```
 
-### 模板表达式操作符 Template expression operators
-#### 管道操作符 ( `|` )
+## 模板表达式操作符 Template expression operators
+### 管道操作符 ( `|` )
 管道是一个简单的函数，它接受一个输入值，并返回转换结果。
  
-#### 安全导航操作符 ( `?.` )
+### 安全导航操作符 ( `?.` )
 Angular 的安全导航操作符 (?.) 是一种流畅而便利的方式，用来保护出现在属性路径中 null 和 undefined 值。
 ```
 The current hero's name is {{currentHero?.name}}
@@ -59,7 +60,7 @@ The current hero's name is {{currentHero?.name}}
 The null hero's name is {{nullHero && nullHero.name}}
 ```
 
-#### 非空断言操作符（`!`）
+### 非空断言操作符（`!`）
 非空断言操作符不会防止出现 null 或 undefined。 它只是告诉 TypeScript 的类型检查器对特定的属性表达式，不做 "严格空值检测"。
 ```
 <div *ngIf="hero">
@@ -68,7 +69,7 @@ The null hero's name is {{nullHero && nullHero.name}}
 ```
 
 
-## 模板语句(template statement)
+# 模板语句(template statement)
 模板语句用来响应由绑定目标（如 HTML 元素、组件或指令）触发的事件。`(event)="statement"`
 ```
 <button (click)="deleteHero()">Delete hero</button>
@@ -84,7 +85,7 @@ The null hero's name is {{nullHero && nullHero.name}}
 - 模板表达式运算符
 
 
-### 语句上下文(Statement context)
+## 语句上下文(Statement context)
 典型的语句上下文就是当前组件的实例。
 - 语句只能引用语句上下文中 —— 通常是正在绑定事件的那个组件实例。
 - `(click)="deleteHero()"` 中的 `deleteHero` 就是这个数据绑定组件上的一个方法。
@@ -98,13 +99,13 @@ The null hero's name is {{nullHero && nullHero.name}}
 ```
 
 
-## 绑定目标 Binding targets
+# 绑定目标 Binding targets
 数据绑定的目标是 DOM 中的某些东西。 这个目标可能是（元素/组件/指令的）`property`、（元素/组件/指令的）`事件`，或(极少数情况下) `attribute` 名。
 
 ![](img/binding-target.png)
 
 
-## 属性绑定 ( `[属性名]` ) 
+# 属性绑定 ( `[属性名]` ) 
 - 最常用的属性绑定是把元素属性设置为组件属性的值
 - 人们经常把属性绑定描述成单向数据绑定，因为值的流动是单向的，从组件的数据属性流动到目标元素的属性。
 ```
@@ -117,13 +118,13 @@ The null hero's name is {{nullHero && nullHero.name}}
 ```
 
 
-## 事件绑定 Event binding 
+# 事件绑定 Event binding 
 事件绑定允许你侦听某些事件，比如按键、鼠标移动、点击和触屏。
 
-### 使用 EventEmitter 实现自定义事件
+## 使用 EventEmitter 实现自定义事件
 指令使用 `Angular EventEmitter` 来触发自定义事件。 指令创建一个 `EventEmitter` 实例，并且把它作为属性暴露出来。 指令调用 `EventEmitter.emit(payload)` 来触发事件，可以传入任何东西作为消息载荷。 父指令通过绑定到这个属性来监听事件，并通过 `$event` 对象来访问载荷。
 
 
-## 双向数据绑定 ( `[(...)]` )
+# 双向数据绑定 ( `[(...)]` )
 - 显示数据属性，并在用户作出更改时更新该属性。在元素层面上，既要设置元素属性，又要监听元素事件变化。
 - 双向数据绑定语法：`[(x)]`。 `[(x)]` 语法结合了属性绑定的方括号 `[x]` 和事件绑定的圆括号 `(x)`。
