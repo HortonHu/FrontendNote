@@ -465,3 +465,133 @@ export class HeroAppComponent {
 - 组件的输出属性会用 HTML 自定义事件的形式进行分发，自定义事件的名字就是这个输出属性的名字。 比如，对于带有 @Output() valueChanged = new EventEmitter() 属性的组件，其相应的自定义元素将会分发名叫 "valueChanged" 的事件，事件中所携带的数据存储在该事件对象的 detail 属性中。 如果你提供了别名，就改用这个别名。比如，@Output('myClick') clicks = new EventEmitter<string>(); 会导致分发名为 "myClick" 事件。
 
 
+
+# 动态组件加载器
+下面的例子展示了如何构建动态广告条。
+
+## 辅助指令
+AdDirective 的辅助指令来在模板中标记出有效的插入点。
+```
+import { Directive, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[ad-host]',
+})
+export class AdDirective {
+  constructor(public viewContainerRef: ViewContainerRef) { }
+}
+```
+- `AdDirective` 注入了 `ViewContainerRef` 来获取对容器视图的访问权，这个容器就是那些动态加入的组件的宿主。
+- 在 @Directive 装饰器中，要注意选择器的名称：ad-host，它就是你将应用到元素上的指令。下一节会展示该如何做。
+
+
+## 加载组件
+`<ng-template>` 元素就是刚才制作的指令将应用到的地方。 要应用 AdDirective，回忆一下来自 ad.directive.ts 的选择器 `ad-host`。把它应用到 `<ng-template>`（不用带方括号）。 这下，Angular 就知道该把组件动态加载到哪里了。
+```
+template: `
+            <div class="ad-banner-example">
+              <h3>Advertisements</h3>
+              <ng-template ad-host></ng-template>
+            </div>
+          `
+```
+
+
+## 解析组件
+- AdBannerComponent 接收一个 AdItem 对象的数组作为输入，它最终来自 AdService。 AdItem 对象指定要加载的组件类，以及绑定到该组件上的任意数据。 AdService 可以返回广告活动中的那些广告。
+- 给 AdBannerComponent 传入一个组件数组可以在模板中放入一个广告的动态列表，而不用写死在模板中。
+- 通过 getAds() 方法，AdBannerComponent 可以循环遍历 AdItems 的数组，并且每三秒调用一次 loadComponent() 来加载新组件。
+
+```
+export class AdBannerComponent implements OnInit, OnDestroy {
+  @Input() ads: AdItem[];
+  currentAdIndex = -1;
+  @ViewChild(AdDirective, {static: true}) adHost: AdDirective;
+  interval: any;
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
+
+  ngOnInit() {
+    this.loadComponent();
+    this.getAds();
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
+  }
+
+  loadComponent() {
+    this.currentAdIndex = (this.currentAdIndex + 1) % this.ads.length;
+    let adItem = this.ads[this.currentAdIndex];
+
+    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
+
+    let viewContainerRef = this.adHost.viewContainerRef;
+    viewContainerRef.clear();
+
+    let componentRef = viewContainerRef.createComponent(componentFactory);
+    (<AdComponent>componentRef.instance).data = adItem.data;
+  }
+
+  getAds() {
+    this.interval = setInterval(() => {
+      this.loadComponent();
+    }, 3000);
+  }
+}
+```
+
+要想确保编译器照常生成工厂类，就要把这些动态加载的组件添加到 NgModule 的 entryComponents 数组中：
+```
+// src/app/app.module.ts (entry components)
+entryComponents: [ HeroJobAdComponent, HeroProfileComponent ],
+```
+
+
+## 公共的 AdComponent 接口
+```
+// hero-job-ad.component.ts
+import { Component, Input } from '@angular/core';
+
+import { AdComponent }      from './ad.component';
+
+@Component({
+  template: `
+    <div class="job-ad">
+      <h4>{{data.headline}}</h4>
+
+      {{data.body}}
+    </div>
+  `
+})
+export class HeroJobAdComponent implements AdComponent {
+  @Input() data: any;
+
+}
+
+// hero-profile.component.ts
+import { Component, Input }  from '@angular/core';
+
+import { AdComponent }       from './ad.component';
+
+@Component({
+  template: `
+    <div class="hero-profile">
+      <h3>Featured Hero Profile</h3>
+      <h4>{{data.name}}</h4>
+
+      <p>{{data.bio}}</p>
+
+      <strong>Hire this hero today!</strong>
+    </div>
+  `
+})
+export class HeroProfileComponent implements AdComponent {
+  @Input() data: any;
+}
+
+// ad.component.ts
+export interface AdComponent {
+  data: any;
+}
+```
