@@ -93,6 +93,34 @@ export class HighlightDirective {
 ```
 
 ## 使用 @Input 数据绑定向指令传递值
+高亮的颜色目前是硬编码在指令中的，这不够灵活。 在这一节中，你应该让指令的使用者可以指定要用哪种颜色进行高亮。
+
+```
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+
+  constructor(private el: ElementRef) { }
+
+  @Input('appHighlight') highlightColor: string;
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.highlight(this.highlightColor || 'red');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.highlight(null);
+  }
+
+  private highlight(color: string) {
+    this.el.nativeElement.style.backgroundColor = color;
+  }
+}
+```
+
 
 
 
