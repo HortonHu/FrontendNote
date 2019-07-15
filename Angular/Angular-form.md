@@ -1,7 +1,7 @@
 # Form
-- Form: reactive and template-driven.
-- Reactive forms are more robust: they're more scalable, reusable, and testable. If forms are a key part of your application, or you're already using reactive patterns for building your application, use reactive forms.
-- Template-driven forms are useful for adding a simple form to an app, such as an email list signup form. They're easy to add to an app, but they don't scale as well as reactive forms. If you have very basic form requirements and logic that can be managed solely in the template, use template-driven forms.
+Angular 提供了两种不同的方法来通过表单处理用户输入：
+- 响应式表单。响应式表单更健壮：它们的可扩展性、可复用性和可测试性更强。 如果表单是应用中的关键部分，或者你已经准备使用响应式编程模式来构建应用，请使用响应式表单。
+- 模板驱动表单。模板驱动表单在往应用中添加简单的表单时非常有用，比如邮件列表的登记表单。它们很容易添加到应用中，但是不像响应式表单那么容易扩展。如果你有非常基本的表单需求和简单到能用模板管理的逻辑，请使用模板驱动表单。
 
 |                    | REACTIVE                                  | TEMPLATE-DRIVEN                      |
 |--------------------|-------------------------------------------|--------------------------------------|
@@ -13,8 +13,8 @@
 | Scalability        | Low-level API access                      | Abstraction on top of APIs           |
 
 
-## Set up
-### Setup in reactive forms
+# Set up
+## Setup in reactive forms
 ```typescript
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -31,7 +31,7 @@ export class FavoriteColorComponent {
 ```
 
 
-### Setup in template-driven forms
+## Setup in template-driven forms
 ```typescript
 import { Component } from '@angular/core';
 
@@ -47,30 +47,30 @@ export class FavoriteColorComponent {
 ```
 
 
-## Data flow in forms
-### Data flow in reactive forms
+# Data flow in forms
+## Data flow in reactive forms
 
-### Data flow in template-driven forms
+## Data flow in template-driven forms
 - each form element is linked to a directive that manages the form model internally
 
 
-## Form validation
-- Reactive forms define custom validators as functions that receive a control to validate.
-- Template-driven forms are tied to template directives, and must provide custom validator directives that wrap validation functions.
+# Form validation
+- 响应式表单把自定义验证器定义成函数，它以要验证的控件作为参数。
+- 模板驱动表单和模板指令紧密相关，并且必须提供包装了验证函数的自定义验证器指令。
 
 
-## Testing
-### Testing reactive forms
+# Testing
+## Testing reactive forms
 
 
-### Testing template-driven forms
+## Testing template-driven forms
 
 
 
-## Mutability
+# Mutability
 
 
-## Scalability
+# Scalability
 
 
 
