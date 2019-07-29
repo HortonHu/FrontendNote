@@ -15,7 +15,7 @@ Angular 提供了两种不同的方法来通过表单处理用户输入：
 
 # Set up
 ## Setup in reactive forms
-```typescript
+```
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
  
@@ -32,7 +32,7 @@ export class FavoriteColorComponent {
 
 
 ## Setup in template-driven forms
-```typescript
+```
 import { Component } from '@angular/core';
 
 @Component({

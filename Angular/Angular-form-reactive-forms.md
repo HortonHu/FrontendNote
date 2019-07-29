@@ -19,7 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class AppModule { }
 ```
 
-生成并导入一个新的表单控件 `ng generate component NameEditor`
+生成并导入一个新的表单控件 `ng generate component NameEditor` 用 FormControl 的实例控制单个输入框所对应的控件
 ```
 // src/app/name-editor/name-editor.component.ts
 import { Component } from '@angular/core';
@@ -59,9 +59,19 @@ export class NameEditorComponent {
 ![](img/Angular-form-reactive-forms-start.png)
 
 
+## 显示表单控件的值
+- 通过可观察对象 `valueChanges`，你可以在模板中使用 `AsyncPipe` 或在组件类中使用 `subscribe()` 方法来监听表单值的变化。
+- 使用 `value` 属性。它能让你获得当前值的一份快照。
+
+
+## 替换表单控件的值
+- `FormControl` 提供了一个 `setValue()` 方法，它会修改这个表单控件的值，并且验证与控件结构相对应的值的结构。比如，当从后端 API 或服务接收到了表单数据时，可以通过 `setValue()` 方法来把原来的值替换为新的值。
+- 当调用 `FormGroup` 或 `FormArray` 的 `setValue()` 方法时，传入的值就必须匹配控件组或控件数组的结构才行。
+
+
 
 # Form Group
-就像 FormControl 的实例能让你控制单个输入框所对应的控件一样，FormGroup 的实例也能跟踪一组 FormControl 实例（比如一个表单）的表单状态。
+FormGroup 跟踪一组 FormControl 实例（比如一个表单）的表单状态。
 ```
 ng generate component ProfileEditor
 
@@ -201,9 +211,10 @@ export class ProfileEditorComponent {
 ![](img/Angular-form-reactive-forms-group-in-group.png)
 
 
-两种更新模型值的方式：
+## 两种更新模型值的方式
 - 使用 `setValue()` 方法来为单个控件设置新值。 `setValue()` 方法会严格遵循表单组的结构，并整体性替换控件的值。
-- 使用 `patchValue()` 方法可以用对象中所定义的任何属性为表单模型进行替换。
+- 使用 `patchValue()` 方法可以用对象中所定义的任何属性为表单模型进行替换。patchValue() 只会更新表单模型中所定义的那些属性。
+setValue() 方法的严格检查可以帮助你捕获复杂表单嵌套中的错误，而 patchValue() 在遇到那些错误时可能会默默的失败。
 
 
 
@@ -216,10 +227,12 @@ export class ProfileEditorComponent {
 import { FormBuilder } from '@angular/forms';
 ```
 
+
 ## Step 2: Injecting the FormBuilder service
 ```
 constructor(private fb: FormBuilder) { }
 ```
+
 
 ## Step 3: Generating form controls
 FormBuilder 服务有三个方法：`control()`、`group()` 和 `array()`。这些方法都是工厂方法，用于在组件类中分别生成 `FormControl`、`FormGroup` 和 `FormArray`。
@@ -291,8 +304,8 @@ HTML5 有一组内置的属性，用来进行原生验证，包括 required、mi
 提交按钮被禁用了，因为 firstName 控件的必填项规则导致了 profileForm 也是无效的。在你填写了 firstName 输入框之后，该表单就变成了有效的，并且提交按钮也启用了。
 
 
-## 使用表单数组FormArray管理动态控件
-- FormArray 是 FormGroup 之外的另一个选择，用于管理任意数量的匿名控件。
+## FormArray管理动态控件
+FormArray 是 FormGroup 之外的另一个选择，用于管理任意数量的匿名控件。
 - 像 FormGroup 实例一样，你也可以往 FormArray 中动态插入和移除控件，并且 FormArray 实例的值和验证状态也是根据它的子控件计算得来的。 
 - 不需要为每个控件定义一个名字作为 key，因此，如果你事先不知道子控件的数量，这就是一个很好的选择。
 
@@ -300,6 +313,7 @@ HTML5 有一组内置的属性，用来进行原生验证，包括 required、mi
 ```
 import { FormArray } from '@angular/forms';
 ```
+
 
 ### Step 2: Defining a FormArray control
 FormGroup 中的这个 aliases 控件现在管理着一个控件，将来还可以动态添加多个。
@@ -319,11 +333,12 @@ profileForm = this.fb.group({
 });
 ```
 
+
 ### Step 3: Accessing the FormArray control
 相对于重复使用 profileForm.get() 方法获取每个实例的方式，getter 可以让你轻松访问表单数组各个实例中的别名。 表单数组实例用一个数组来代表未定数量的控件。通过 getter 来访问控件很方便，这种方法还能很容易地重复处理更多控件。
 
+#### getter 可以让你轻松访问表单数组各个实例中的别名
 ```
-// 使用 getter 语法创建类属性 aliases，以从父表单组中接收表示绰号的表单数组控件。
 get aliases() {
   return this.profileForm.get('aliases') as FormArray;
 }
