@@ -1,0 +1,92 @@
+# 长列表 
+React Native 提供了几个适用于展示长列表数据的组件，一般而言我们会选用FlatList或是SectionList。
+
+## FlatList
+- `FlatList`组件用于显示一个垂直的滚动列表，其中的元素之间结构近似而仅数据不同。
+- `FlatList`更适于长列表数据，且元素个数可以增删。和`ScrollView`不同的是，`FlatList`并不立即渲染所有元素，而是优先渲染屏幕上可见的元素。
+- `FlatList`组件必须的两个属性是`data`和`renderItem`。`data`是列表的数据源，而`renderItem`则从数据源中逐个解析数据，然后返回一个设定好格式的组件来渲染。
+
+```
+import React, { Component } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+
+export default class FlatListBasics extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={[
+            {key: 'Devin'},
+            {key: 'Jackson'},
+            {key: 'James'},
+            {key: 'Joel'},
+            {key: 'John'},
+            {key: 'Jillian'},
+            {key: 'Jimmy'},
+            {key: 'Julie'},
+          ]}
+          renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+   paddingTop: 22
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+})
+```
+
+## SectionList
+如果要渲染的是一组需要分组的数据，也许还带有分组标签的，那么SectionList将是个不错的选择
+```
+import React, { Component } from 'react';
+import { SectionList, StyleSheet, Text, View } from 'react-native';
+
+export default class SectionListBasics extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <SectionList
+          sections={[
+            {title: 'D', data: ['Devin']},
+            {title: 'J', data: ['Jackson', 'James', 'Jillian', 'Jimmy', 'Joel', 'John', 'Julie']},
+          ]}
+          renderItem={({item}) => <Text style={styles.item}>{item}</Text>}
+          renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+          keyExtractor={(item, index) => index}
+        />
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+   paddingTop: 22
+  },
+  sectionHeader: {
+    paddingTop: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 2,
+    fontSize: 14,
+    fontWeight: 'bold',
+    backgroundColor: 'rgba(247,247,247,1.0)',
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+})
+```
