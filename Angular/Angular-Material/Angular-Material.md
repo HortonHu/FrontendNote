@@ -1,6 +1,8 @@
 # Start
 ## Step 1: Install
-`npm install --save @angular/material @angular/cdk @angular/animations`
+```
+npm install --save @angular/material @angular/cdk @angular/animations
+```
 
 ## Step 2: Configure
 ```
@@ -36,7 +38,9 @@ add this to your `styles.css`
 ```
 
 ## Step 5: Gesture Support
-`npm install --save hammerjs`
+```
+npm install --save hammerjs
+```
 
 After installing, import it on your app's entry point (e.g. src/main.ts).
 
