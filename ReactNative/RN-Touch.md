@@ -9,6 +9,7 @@
 />
 ```
 上面这段代码会在 iOS 上渲染一个蓝色的标签状按钮，在 Android 上则会渲染一个蓝色圆角矩形带白字的按钮。点击这个按钮会调用"onPress"函数，具体作用就是显示一个 alert 弹出框。你还可以指定"color"属性来修改按钮的颜色。
+- button无法使用style prop 可以用自定义的TouchableOpacity 来代替button
 
 多个button
 ```
