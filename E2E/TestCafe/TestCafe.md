@@ -306,7 +306,7 @@ TestCafe uses the `.testcaferc.json` configuration file to store its settings. K
 
 
 # Using TestCafe Docker Image
-
+Todo
 
 
 # Common Concepts
@@ -317,22 +317,3 @@ TestCafe uses the `.testcaferc.json` configuration file to store its settings. K
 ## Inject Scripts into Tested Pages
 ## Reporters
 ## Test HTTPS and HTTP/2 Websites
-
-
-# API
-https://devexpress.github.io/testcafe/documentation/test-api/test-code-structure.html
-
-## Test Code Structure
-## Actions
-## Selecting Page Elements
-## Assertions
-## Obtaining Data From the Client
-## Intercepting HTTP Requests
-## Built-In Waiting Mechanisms
-## Authentication
-## Pausing the Test
-## Handling Native Dialogs
-## Working with <iframes>
-## Debugging
-## Identify the Browser and Platform
-## Accessing Console Messages
