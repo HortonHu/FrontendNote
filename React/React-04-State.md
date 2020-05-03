@@ -19,12 +19,12 @@ class Clock extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
-
+integrate.html
   tick() {
     this.setState({
       date: new Date()
     });
-  }
+  }integrate.html
 
   render() {
     return (
@@ -41,6 +41,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+在 JavaScript class 中，每次你定义其子类的构造函数时，都需要调用 `super` 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 `super(props)` 开头。
 
 
 ## 生命周期方法
