@@ -1,0 +1,1 @@
+https://devexpress.github.io/testcafe/documentation/continuous-integration/
