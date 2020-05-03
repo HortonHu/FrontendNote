@@ -142,8 +142,6 @@ function validate_email(field,alerttxt) {
 
 # map
 
-
-
 # reduce
 
 
