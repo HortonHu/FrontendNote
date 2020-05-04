@@ -142,7 +142,7 @@ class FlavorForm extends React.Component {
 
 
 # 处理多个输入
-当需要处理多个 input 元素时，我们可以给每个元素添加 name 属性，并让处理函数根据 event.target.name 的值选择要执行的操作。
+当需要处理多个 input 元素时，我们可以给每个元素添加 `name` 属性，并让处理函数根据 `event.target.name` 的值选择要执行的操作。
 ```
 class Reservation extends React.Component {
   constructor(props) {
@@ -193,7 +193,7 @@ class Reservation extends React.Component {
 
 
 # 受控输入空值
-在受控组件上指定 value 的 prop 可以防止用户更改输入。如果指定了 value，但输入仍可编辑，则可能是意外地将value 设置为 undefined 或 null。
+在受控组件上指定 `value` 的 `prop` 可以防止用户更改输入。如果指定了 `value`，但输入仍可编辑，则可能是意外地将`value` 设置为 `undefined` 或 `null`。
 ```
 ReactDOM.render(<input value="hi" />, mountNode);
 

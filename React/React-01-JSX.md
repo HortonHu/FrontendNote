@@ -7,13 +7,7 @@ const element = <h1>Hello, world!</h1>;
 # 在 JSX 中嵌入表达式
 嵌入变量
 ```
-const name = 'Josh Perez';
 const element = <h1>Hello, {name}</h1>;
-
-ReactDOM.render(
-  element,
-  document.getElementById('root')
-);
 ```
 
 嵌入函数
@@ -70,6 +64,11 @@ const element = <img src={user.avatarUrl}></img>;
   
 
 # 使用 JSX 指定子元素
+假如一个标签里面没有内容，你可以使用 /> 来闭合标签，就像 XML 语法一样：
+```
+const element = <img src={user.avatarUrl} />;
+```
+
 ```
 const element = (
   <div>

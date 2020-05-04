@@ -1,7 +1,7 @@
 # State and Lifecycle
-State 与 props 类似，但是 state 是私有的，并且完全受控于当前组件。
-
-
+- State 与 props 类似，但是 state 是私有的，并且完全受控于当前组件。
+- 在 JavaScript class 中，每次你定义其子类的构造函数时，都需要调用 `super` 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 `super(props)` 开头。
+- 改变state的方法 setState({foo:bar})
 ```
 class Clock extends React.Component {
   constructor(props) {
@@ -19,12 +19,12 @@ class Clock extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timerID);
   }
-integrate.html
+
   tick() {
     this.setState({
       date: new Date()
     });
-  }integrate.html
+  }
 
   render() {
     return (
@@ -41,7 +41,6 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
-在 JavaScript class 中，每次你定义其子类的构造函数时，都需要调用 `super` 方法。因此，在所有含有构造函数的的 React 组件中，构造函数必须以 `super(props)` 开头。
 
 
 ## 生命周期方法
@@ -59,7 +58,6 @@ ReactDOM.render(
 ```
 
 - componentDidMount() 方法会在组件已经被渲染到 DOM 中后运行，所以，最好在这里设置计时器：
-
 
 
 # 正确地使用 State
@@ -91,14 +89,6 @@ this.setState({
 this.setState((state, props) => ({
   counter: state.counter + props.increment
 }));
-
-// 上面使用了箭头函数，不过使用普通的函数也同样可以：
-// Correct
-this.setState(function(state, props) {
-  return {
-    counter: state.counter + props.increment
-  };
-});
 ```
 
 ## State 的更新会被合并
@@ -127,7 +117,6 @@ this.setState(function(state, props) {
     }
 ```
 这里的合并是浅合并，所以 `this.setState({comments})` 完整保留了 `this.state.posts`， 但是完全替换了 `this.state.comments`。
-
 
 
 # 数据是向下流动的
